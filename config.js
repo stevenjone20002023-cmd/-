@@ -1,8 +1,9 @@
-// config.js
+// ملف: -/config.js (المتجر)
 window.MY_STORE_CONFIG = {
   firebase: {
     apiKey: "AIzaSyB2_KZ9Gn1e533viEORuzxeoMnXHrJg1yI",
     authDomain: "iuyhiuhy.firebaseapp.com",
+    databaseURL: "https://iuyhiuhy-default-rtdb.firebaseio.com",
     projectId: "iuyhiuhy",
     storageBucket: "iuyhiuhy.firebasestorage.app",
     messagingSenderId: "737406385560",
