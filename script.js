@@ -1,5 +1,5 @@
-// script.js
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+// ملف: -/script.js (المتجر)
+import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -20,38 +20,39 @@ let adminPhoneNumber = "";
 let sliderInterval;
 let currentProductId = null;
 
-// قاعدة البيانات الجديدة باستخدام Module
-const db = getDatabase(window.app);
+const db = getFirestore(window.app);
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    onValue(ref(db, 'settings'), snapshot => {
-        const s = snapshot.val();
-        if(s) {
-            if(s.whatsapp) adminPhoneNumber = s.whatsapp;
+    onSnapshot(collection(db, 'settings'), snapshot => {
+        if(!snapshot.empty) {
+            snapshot.forEach(docSnap => {
+                const s = docSnap.data();
+                if(s.whatsapp) adminPhoneNumber = s.whatsapp;
+            });
         }
     });
 
-    onValue(ref(db, 'categories'), snapshot => {
+    onSnapshot(collection(db, 'categories'), snapshot => {
         const catContainer = document.getElementById('dynamic-categories');
         if(!catContainer) return;
-        const data = snapshot.val();
         catContainer.innerHTML = `<div class="category-item" onclick="filterProducts('all')"><div class="cat-box active"><div class="square-icon"></div></div><span class="cat-name">الكل</span></div>`;
-        if(data) {
-            Object.values(data).forEach(cat => {
+        if(!snapshot.empty) {
+            snapshot.forEach(docSnap => {
+                const cat = docSnap.data();
                 catContainer.innerHTML += `<div class="category-item" onclick="filterProducts('${cat.id}')"><div class="cat-box"><img src="${cat.image}" class="cat-img"></div><span class="cat-name">${cat.name}</span></div>`;
             });
         }
     });
 
-    onValue(ref(db, 'banners'), snapshot => {
+    onSnapshot(collection(db, 'banners'), snapshot => {
         const slider = document.getElementById('dynamic-slider');
         if(!slider) return;
-        const data = snapshot.val();
         slider.innerHTML = "";
         if(sliderInterval) clearInterval(sliderInterval);
-        if(data) {
-            const banners = Object.values(data);
+        if(!snapshot.empty) {
+            const banners = [];
+            snapshot.forEach(docSnap => banners.push(docSnap.data()));
             banners.forEach(b => { slider.innerHTML += `<img src="${b.image}" alt="${b.title || 'Offer'}">`; });
             let currentIndex = 0;
             const totalSlides = banners.length;
@@ -103,18 +104,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // جلب المنتجات مع العرض التدريجي والتصميم الجديد
-    onValue(ref(db, 'products'), (snapshot) => {
+    onSnapshot(collection(db, 'products'), snapshot => {
         const container = document.getElementById('products-container');
         if(!container) return;
         container.innerHTML = "";
-        const data = snapshot.val();
-        if (!data) { container.innerHTML = "<p style='width:200%; text-align:center;'>لا توجد منتجات</p>"; return; }
-        allProducts = data;
-        const productsKeys = Object.keys(data).reverse();
+        allProducts = {};
+        if (snapshot.empty) { container.innerHTML = "<p style='width:200%; text-align:center;'>لا توجد منتجات</p>"; return; }
         
-        productsKeys.forEach((key, index) => {
-             const prod = data[key];
+        const docs = [];
+        snapshot.forEach(d => {
+            const data = d.data();
+            allProducts[d.id] = data;
+            docs.push({id: d.id, data: data});
+        });
+
+        docs.reverse().forEach((item, index) => {
+             const key = item.id;
+             const prod = item.data;
              const delay = index * 0.1;
              const card = `<div class="product-card" data-category="${prod.category || 'general'}" id="card-${key}" onclick="animateCardAndOpen(event, '${key}', 'card-${key}')" style="animation-delay: ${delay}s"><span class="discount-badge">جديد</span><div class="img-wrapper"><img src="${prod.image}" class="prod-img" loading="lazy"></div><div class="prod-details"><div class="prod-title">${prod.title}</div><div class="price">${prod.price || 0} د.ع</div></div></div>`;
             container.innerHTML += card;
@@ -285,7 +291,7 @@ window.clearCart = function() {
     window.updateCartUI(); 
 }
 
-window.processCheckout = function() {
+window.processCheckout = async function() {
     if(cart.length === 0) { showToast("السلة فارغة!"); return; }
     
     const name = document.getElementById('order-name').value;
@@ -299,7 +305,17 @@ window.processCheckout = function() {
     }
 
     showToast("جاري إرسال الطلب...");
-    setTimeout(() => {
+    try {
+        await addDoc(collection(db, 'orders'), {
+            cart: cart,
+            name: name,
+            phone: phone,
+            gov: gov,
+            address: address,
+            status: 'pending',
+            date: serverTimestamp()
+        });
+        
         cart = [];
         document.getElementById('order-name').value = '';
         document.getElementById('order-phone').value = '';
@@ -308,7 +324,10 @@ window.processCheckout = function() {
         window.updateCartUI();
         window.showPage('home-page');
         showToast("تم استلام طلبك بنجاح!");
-    }, 1500);
+    } catch (e) {
+        showToast("حدث خطأ أثناء الإرسال!");
+        console.error(e);
+    }
 }
 
 window.handleGoogleLogin = function() { 
