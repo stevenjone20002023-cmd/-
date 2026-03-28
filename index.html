@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>مسك ستور mask_store لملابس الاطفال</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+    <meta name="theme-color" content="#ff9900">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="install-banner" class="install-banner">
+        <div style="display:flex; gap:10px; align-items:center;">
+            <i class="fa-brands fa-android"></i> <span>تثبيت التطبيق</span>
+        </div>
+        <button id="install-btn">تثبيت</button>
+        <button id="close-install"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="splash-screen"><div class="splash-content"><h1 id="splash-title">مسك ستور mask_store لملابس الاطفال</h1><div class="loader"></div></div></div>
+    <div id="toast-notification">تمت العملية بنجاح!</div>
+
+    <div id="home-page" class="page active-page">
+        <header class="sticky-header">
+            <div class="top-nav">
+                <div class="logo animated-store-name" id="store-name-display">مسك ستور mask_store لملابس الاطفال</div>
+            </div>
+            <div class="search-container" style="max-width: 70%; margin: 0 auto;"><div class="search-box"><input type="text" id="search-input" placeholder="ابحث عن منتج..."><i class="fa-solid fa-magnifying-glass"></i></div></div>
+        </header>
+        <div class="main-content">
+            <div class="slider-container"><div class="slider-wrapper" id="dynamic-slider"></div><div class="promo-text">عروض مميزة</div></div>
+            <h3 class="section-title">تصفح الفئات</h3>
+            <div class="categories-scroll" id="dynamic-categories"><div class="category-item" onclick="filterProducts('all')"><div class="cat-box active"><div class="square-icon"></div></div><span class="cat-name">الكل</span></div></div>
+            <div class="section-title"><span>أحدث المنتجات</span></div>
+            <div class="products-grid" id="products-container"><div style="text-align:center; width:200%; padding:20px; color:#777;">جاري التحميل...</div></div>
+        </div>
+    </div>
+
+    <div id="product-page" class="page">
+        <div class="product-header"><button class="back-btn" onclick="goBack()"><i class="fa-solid fa-arrow-right"></i></button><span class="header-title">تفاصيل المنتج</span></div>
+        <div class="product-view-scroll">
+            <div class="large-image-container" id="detail-images-container" style="display: flex; flex-direction: column; padding: 15px; height: auto;">
+                </div>
+            <div class="detail-content">
+                <div id="detail-dynamic-buttons" style="margin-bottom: 20px;"></div>
+                <h2 id="detail-title"></h2>
+                <div id="detail-price" style="color: var(--primary); font-size: 20px; font-weight: bold; margin-bottom: 10px;"></div>
+                <div class="detail-desc"><p></p></div>
+                <button onclick="addToCartFromDetail()" style="width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: bold; margin-top: 20px;">إضافة للسلة <i class="fa-solid fa-cart-shopping"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cart-page" class="page">
+        <div class="product-header"><button class="back-btn" onclick="goBack()"><i class="fa-solid fa-arrow-right"></i></button><span class="header-title">سلة المشتريات</span></div>
+        <div style="padding: 20px; padding-bottom: 100px;" id="cart-container">
+            <div id="cart-items"></div>
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+            <div style="font-weight: bold; font-size: 18px; margin-bottom: 20px;">المجموع: <span id="cart-total">0</span> د.ع</div>
+            
+            <h3 style="margin-bottom: 15px; font-size: 16px;">معلومات الطلب</h3>
+            <input type="text" id="order-name" placeholder="الاسم الثلاثي" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
+            <input type="tel" id="order-phone" placeholder="رقم الهاتف" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
+            <select id="order-gov" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; outline: none; background: #fff;">
+                <option value="" disabled selected>اختر المحافظة</option>
+                <option value="بغداد">بغداد</option>
+                <option value="البصرة">البصرة</option>
+                <option value="نينوى">نينوى</option>
+                <option value="أربيل">أربيل</option>
+                <option value="النجف">النجف</option>
+                <option value="ذي قار">ذي قار</option>
+                <option value="كركوك">كركوك</option>
+                <option value="الأنبار">الأنبار</option>
+                <option value="ديالى">ديالى</option>
+                <option value="المثنى">المثنى</option>
+                <option value="القادسية">القادسية</option>
+                <option value="ميسان">ميسان</option>
+                <option value="واسط">واسط</option>
+                <option value="صلاح الدين">صلاح الدين</option>
+                <option value="دهوك">دهوك</option>
+                <option value="السليمانية">السليمانية</option>
+                <option value="بابل">بابل</option>
+                <option value="كربلاء">كربلاء</option>
+            </select>
+            <input type="text" id="order-address" placeholder="أقرب نقطة دالة" style="width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
+            <button onclick="processCheckout()" style="width: 100%; background: #2ecc71; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: bold;">إتمام الطلب</button>
+        </div>
+    </div>
+
+    <div id="iframe-modal" class="iframe-modal">
+        <div class="iframe-header">
+            <span style="color: white; font-weight: bold; font-size: 14px;">تصفح الرابط</span>
+            <button onclick="closeIframe()"><i class="fa-solid fa-xmark"></i> إغلاق</button>
+        </div>
+        <iframe id="internal-iframe" src="" frameborder="0"></iframe>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="showPage('home-page')"><i class="fa-solid fa-house"></i><span>الرئيسية</span></div>
+        <div class="nav-item" onclick="showPage('cart-page')"><i class="fa-solid fa-cart-shopping"></i><span>السلة</span></div>
+        <a href="https://www.instagram.com/msk_stor0?igsh=MWcxOTB2d2NyZ2poZw==" class="nav-item" target="_blank" style="text-decoration:none; color:#aaa; display:flex; flex-direction:column; align-items:center;"><i class="fa-brands fa-instagram"></i><span>انستغرام</span></a>
+    </nav>
+
+    <script src="config.js"></script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyB2_KZ9Gn1e533viEORuzxeoMnXHrJg1yI",
+        authDomain: "iuyhiuhy.firebaseapp.com",
+        projectId: "iuyhiuhy",
+        storageBucket: "iuyhiuhy.firebasestorage.app",
+        messagingSenderId: "737406385560",
+        appId: "1:737406385560:web:89ebc5763346810d86bfed"
+      };
+      window.app = initializeApp(firebaseConfig);
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
