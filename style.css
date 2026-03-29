@@ -41,6 +41,33 @@ body { background: var(--light); color: var(--text); overflow-x: hidden; padding
 .sticky-header { position: sticky; top: 0; z-index: 100; background: var(--primary); padding: 15px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; box-shadow: var(--shadow); }
 .top-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
 
+/* شريط الأخبار 3D */
+.news-ticker-container {
+    background: linear-gradient(90deg, #ff9900, #ff5e62);
+    color: white;
+    padding: 8px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transform: perspective(500px) rotateX(5deg);
+    margin-bottom: 15px;
+    border-radius: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+.news-ticker-text {
+    white-space: nowrap;
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-block;
+    animation: ticker 12s linear infinite;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+@keyframes ticker {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
 /* === 7. البحث === */
 .search-container { background: var(--white); border-radius: 15px; padding: 5px 15px; display: flex; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
 .search-box { width: 100%; display: flex; align-items: center; }
@@ -70,7 +97,7 @@ body { background: var(--light); color: var(--text); overflow-x: hidden; padding
 .cat-name { font-size: 11px; text-align: center; display: block; margin-top: 5px; font-weight: 600; }
 .square-icon { width: 20px; height: 20px; background: var(--primary); border-radius: 4px; }
 
-/* === 10. شبكة المنتجات (العرض التدريجي والتصميم الجديد) === */
+/* === 10. شبكة المنتجات === */
 .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 15px; }
 .product-card { 
     background: var(--white); 
@@ -99,9 +126,19 @@ body { background: var(--light); color: var(--text); overflow-x: hidden; padding
 
 /* === 11. الشريط السفلي (Bottom Nav) === */
 .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 12px 0; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 900; }
-.nav-item { text-align: center; color: #aaa; font-size: 10px; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; }
+.nav-item { text-align: center; color: #aaa; font-size: 10px; cursor: pointer; flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
 .nav-item.active { color: var(--primary); }
 .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+
+/* عداد السلة (Badge) */
+.cart-badge {
+    position: absolute; top: -5px; right: 25%;
+    background: #e74c3c; color: white;
+    font-size: 11px; font-weight: bold;
+    width: 20px; height: 20px; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
 
 /* === 12. تفاصيل المنتج === */
 .product-header { padding: 15px; display: flex; justify-content: space-between; align-items: center; background: var(--white); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
@@ -121,7 +158,7 @@ body { background: var(--light); color: var(--text); overflow-x: hidden; padding
 .dynamic-link-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(17, 153, 142, 0.6); }
 .dynamic-link-btn:hover::after { left: 100%; }
 
-/* === تنسيق نافذة الإطار المدمج (Iframe) === */
+/* === نافذة الإطار المدمج (Iframe) === */
 .iframe-modal {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--light); z-index: 10000; display: none; flex-direction: column;
 }
@@ -129,11 +166,52 @@ body { background: var(--light); color: var(--text); overflow-x: hidden; padding
 .iframe-header button { background: var(--white); border: none; color: var(--text); padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 #internal-iframe { width: 100%; flex-grow: 1; border: none; background: #fff; }
 
-/* === 13. الإشعارات (Toast) === */
-#toast-notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 12px; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 2000; }
-.show-toast { opacity: 1 !important; top: 60px !important; }
+/* === 13. الإشعارات (Toast) 3D === */
+#toast-notification { 
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
+    background: #333; color: white; padding: 10px 20px; border-radius: 20px; 
+    font-size: 12px; opacity: 0; pointer-events: none; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    z-index: 2000; text-align: center; white-space: nowrap;
+}
+#toast-notification.toast-3d {
+    font-size: 18px; font-weight: 800; padding: 15px 30px;
+    background: linear-gradient(135deg, #ff9900, #ff5e62);
+    box-shadow: 0 10px 25px rgba(255, 94, 98, 0.5);
+    border: 2px solid white;
+    transform: perspective(500px) rotateX(20deg) translateY(-30px) translateX(-50%);
+}
+#toast-notification.toast-3d.show-toast {
+    transform: perspective(500px) rotateX(0deg) translateY(0) translateX(-50%) !important;
+    opacity: 1 !important; top: 60px !important;
+}
 
-/* === 14. قياسات تناسب شاشات الهواتف والحواسيب (Responsive) === */
+/* === 14. نافذة منبثقة 3D للطلب الناجح === */
+.custom-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); z-index: 10000;
+    display: none; justify-content: center; align-items: center;
+    perspective: 1000px;
+}
+.modal-content.anim-3d {
+    background: white; padding: 30px; border-radius: 20px;
+    text-align: center; width: 85%; max-width: 400px;
+    transform: rotateX(-30deg) scale(0.8);
+    opacity: 0;
+    animation: modalIn 0.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    border: 3px solid #2ecc71;
+}
+@keyframes modalIn {
+    to { transform: rotateX(0) scale(1); opacity: 1; }
+}
+.modal-content button {
+    background: #2ecc71; color: white; border: none; padding: 12px 35px;
+    border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer;
+    font-size: 16px; box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3); transition: 0.3s;
+}
+.modal-content button:active { transform: scale(0.95); }
+
+/* === قياسات تناسب شاشات الهواتف والحواسيب === */
 @media (min-width: 768px) {
     .products-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
     .slider-container { height: 300px; }
