@@ -22,6 +22,14 @@
     <div id="splash-screen"><div class="splash-content"><h1 id="splash-title" style="text-align: center; white-space: normal;">مسك ستور<br>mask_store<br>لملابس الاطفال</h1><div class="loader"></div></div></div>
     <div id="toast-notification">تمت العملية بنجاح!</div>
 
+    <div id="success-modal" class="custom-modal">
+        <div class="modal-content anim-3d">
+            <i class="fa-solid fa-circle-check" style="font-size: 60px; color: #2ecc71; margin-bottom: 15px;"></i>
+            <p style="font-size: 16px; font-weight: bold; line-height: 1.6; color: #333;">تم ارسال الطلب يرجى فحص المنتج بوجود المندوب قبل دفع المبلغ . مده التوصيل يومان مسك ستور</p>
+            <button onclick="closeSuccessModal()">حسناً</button>
+        </div>
+    </div>
+
     <div id="home-page" class="page active-page">
         <header class="sticky-header">
             <div class="top-nav">
@@ -29,6 +37,11 @@
             </div>
             <div class="search-container" style="max-width: 70%; margin: 0 auto;"><div class="search-box"><input type="text" id="search-input" placeholder="ابحث عن منتج..."><i class="fa-solid fa-magnifying-glass"></i></div></div>
         </header>
+        
+        <div id="news-ticker-container" class="news-ticker-container" style="display: none;">
+            <div class="news-ticker-text" id="store-news-text"></div>
+        </div>
+
         <div class="main-content">
             <div class="slider-container"><div class="slider-wrapper" id="dynamic-slider"></div><div class="promo-text">عروض مميزة</div></div>
             <h3 class="section-title">تصفح الفئات</h3>
@@ -59,8 +72,8 @@
             <div id="cart-items"></div>
             <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
             <div style="font-weight: bold; font-size: 16px; margin-bottom: 10px;">السعر الكلي: <span id="cart-total">0</span> د.ع</div>
-            <div style="font-size: 14px; color: #e74c3c; margin-bottom: 10px;">سعر التوصيل 5 لجميع محافضات العراق</div>
-            <div style="font-size: 14px; color: #555; margin-bottom: 10px;">سيتم اضافة تكلفت التوصيل 5 د ع للطلب الخاص بك</div>
+            <div style="font-size: 14px; color: #e74c3c; margin-bottom: 10px;">سعر التوصيل 5000 لجميع محافظات العراق</div>
+            <div style="font-size: 14px; color: #555; margin-bottom: 10px;">سيتم اضافة تكلفة التوصيل 5000 دينار عراقي للطلب الخاص بك</div>
             <div style="font-weight: bold; font-size: 18px; margin-bottom: 20px;">الجمع الكلي: <span id="cart-grand-total">0</span> د.ع</div>
             
             <h3 style="margin-bottom: 15px; font-size: 16px;">معلومات الطلب</h3>
@@ -88,7 +101,6 @@
                 <option value="كربلاء">كربلاء</option>
             </select>
             <input type="text" id="order-address" placeholder="الحي او المنطقة" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
-            <input type="text" id="order-notes-product" placeholder="ملاحضات مثل العمر او يكتب اي ملاحضة تخص المنتج" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
             <input type="text" id="order-notes-supplier" placeholder="اكتب ملاحضه للمجهز او اترك الحقل فارغ" style="width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
             <button onclick="processCheckout()" style="width: 100%; background: #2ecc71; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: bold;">إتمام الطلب</button>
         </div>
@@ -104,7 +116,10 @@
 
     <nav class="bottom-nav">
         <div class="nav-item active" onclick="showPage('home-page')"><i class="fa-solid fa-house"></i><span>الرئيسية</span></div>
-        <div class="nav-item" onclick="showPage('cart-page')"><i class="fa-solid fa-cart-shopping"></i><span>السلة</span></div>
+        <div class="nav-item" onclick="showPage('cart-page')">
+            <span id="cart-badge" class="cart-badge" style="display:none;">0</span>
+            <i class="fa-solid fa-cart-shopping"></i><span>السلة</span>
+        </div>
         <a href="https://www.instagram.com/msk_stor0?igsh=MWcxOTB2d2NyZ2poZw==" class="nav-item" target="_blank" style="text-decoration:none; color:#aaa; display:flex; flex-direction:column; align-items:center;"><i class="fa-brands fa-instagram"></i><span>انستغرام</span></a>
     </nav>
 
