@@ -132,14 +132,19 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase().trim();
             const cards = document.querySelectorAll('.product-card');
+            let found = false;
             cards.forEach(card => {
                 const title = card.querySelector('.prod-title').innerText.toLowerCase();
                 if(title.includes(term)) {
                     card.style.display = 'flex';
+                    if(term.length > 0) found = true;
                 } else {
                     card.style.display = 'none';
                 }
             });
+            if(found && term.length > 0) {
+                showToast("تم العثور على المنتج المطلوب");
+            }
         });
     }
 });
@@ -252,6 +257,8 @@ window.updateCartUI = function() {
     if(cart.length === 0) {
         cartItems.innerHTML = '<p style="text-align:center; padding:20px; color:#777;">السلة فارغة حالياً</p>';
         cartTotal.innerText = '0';
+        const grandTotalEl = document.getElementById('cart-grand-total');
+        if(grandTotalEl) grandTotalEl.innerText = '0';
         return;
     }
     
@@ -273,6 +280,10 @@ window.updateCartUI = function() {
         `;
     });
     cartTotal.innerText = total;
+    const grandTotalEl = document.getElementById('cart-grand-total');
+    if(grandTotalEl) {
+        grandTotalEl.innerText = total + 5;
+    }
 }
 
 window.changeQty = function(index, amount) {
@@ -298,6 +309,8 @@ window.processCheckout = async function() {
     const phone = document.getElementById('order-phone').value;
     const gov = document.getElementById('order-gov').value;
     const address = document.getElementById('order-address').value;
+    const notesProduct = document.getElementById('order-notes-product') ? document.getElementById('order-notes-product').value : '';
+    const notesSupplier = document.getElementById('order-notes-supplier') ? document.getElementById('order-notes-supplier').value : '';
 
     if(!name || !phone || !gov || !address) {
         showToast("يرجى ملء جميع الحقول المطلوبة");
@@ -312,6 +325,9 @@ window.processCheckout = async function() {
             phone: phone,
             gov: gov,
             address: address,
+            notesProduct: notesProduct,
+            notesSupplier: notesSupplier,
+            deliveryFee: 5,
             status: 'pending',
             date: serverTimestamp()
         });
@@ -321,9 +337,11 @@ window.processCheckout = async function() {
         document.getElementById('order-phone').value = '';
         document.getElementById('order-gov').value = '';
         document.getElementById('order-address').value = '';
+        if(document.getElementById('order-notes-product')) document.getElementById('order-notes-product').value = '';
+        if(document.getElementById('order-notes-supplier')) document.getElementById('order-notes-supplier').value = '';
         window.updateCartUI();
         window.showPage('home-page');
-        showToast("تم استلام طلبك بنجاح!");
+        showToast("تم ارسال الطلب يرجى فحص المنتج بوجود المندوب قبل دفع المبلغ .");
     } catch (e) {
         showToast("حدث خطأ أثناء الإرسال!");
         console.error(e);
