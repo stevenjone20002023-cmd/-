@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>مسك ستور mask_store لملابس الاطفال</title>
+    <title>مسك ستور mask-store كل ما يخص الطفل جملة-مفرد</title>
     <link rel="manifest" href="./manifest.json">
     <link rel="apple-touch-icon" href="./icon-192.png">
     <meta name="theme-color" content="#ff9900">
@@ -14,12 +14,14 @@
 <body>
     <div id="install-banner" class="install-banner">
         <div style="display:flex; gap:10px; align-items:center;">
-            <i class="fa-brands fa-android"></i> <span>تثبيت التطبيق</span>
+            <i class="fa-brands fa-android"></i> <span style="font-size: 13px; font-weight: bold;">هل تريد تثبيت التطبيق لتحصل على تجربة أسهل وأسرع؟</span>
         </div>
-        <button id="install-btn">تثبيت</button>
-        <button id="close-install"><i class="fa-solid fa-xmark"></i></button>
+        <div style="display:flex; gap:5px; align-items:center;">
+            <button id="install-btn">تثبيت</button>
+            <button id="close-install"><i class="fa-solid fa-xmark"></i></button>
+        </div>
     </div>
-    <div id="splash-screen"><div class="splash-content"><h1 id="splash-title" style="text-align: center; white-space: normal;">مسك ستور<br>mask_store<br>لملابس الاطفال</h1><div class="loader"></div></div></div>
+    <div id="splash-screen"><div class="splash-content"><h1 id="splash-title" style="text-align: center; white-space: normal; line-height: 1.5;">مسك ستور<br>mask-store<br>كل ما يخص الطفل جملة-مفرد</h1><div class="loader"></div></div></div>
     <div id="toast-notification">تمت العملية بنجاح!</div>
 
     <div id="success-modal" class="custom-modal">
@@ -33,15 +35,15 @@
     <div id="home-page" class="page active-page">
         <header class="sticky-header">
             <div class="top-nav">
-                <div class="logo animated-store-name" id="store-name-display" style="text-align: center; white-space: normal; line-height: 1.2;">مسك ستور<br>mask_store<br>لملابس الاطفال</div>
+                <div class="logo animated-store-name" id="store-name-display" style="text-align: center; white-space: nowrap; font-size: 13px;">مسك ستور | mask-store | كل ما يخص الطفل جملة-مفرد</div>
             </div>
-            <div class="search-container" style="max-width: 70%; margin: 0 auto;"><div class="search-box"><input type="text" id="search-input" placeholder="ابحث عن منتج..."><i class="fa-solid fa-magnifying-glass"></i></div></div>
+            <div class="search-container" style="max-width: 100%; margin: 0 auto;"><div class="search-box"><input type="text" id="search-input" placeholder="ابحث عن منتج..."><i class="fa-solid fa-magnifying-glass"></i></div></div>
+            
+            <div id="news-ticker-container" class="news-ticker-container" style="display: none;">
+                <div class="news-ticker-text" id="store-news-text"></div>
+            </div>
         </header>
         
-        <div id="news-ticker-container" class="news-ticker-container" style="display: none;">
-            <div class="news-ticker-text" id="store-news-text"></div>
-        </div>
-
         <div class="main-content">
             <div class="slider-container"><div class="slider-wrapper" id="dynamic-slider"></div><div class="promo-text">عروض مميزة</div></div>
             <h3 class="section-title">تصفح الفئات</h3>
@@ -77,7 +79,7 @@
             <div style="font-weight: bold; font-size: 18px; margin-bottom: 20px;">الجمع الكلي: <span id="cart-grand-total">0</span> د.ع</div>
             
             <h3 style="margin-bottom: 15px; font-size: 16px;">معلومات الطلب</h3>
-            <input type="text" id="order-name" placeholder="الاسم الثلاثي" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
+            <input type="text" id="order-name" placeholder="الاسم" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
             <input type="tel" id="order-phone" placeholder="رقم الهاتف" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; outline: none;">
             <select id="order-gov" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd; outline: none; background: #fff;">
                 <option value="" disabled selected>اختر المحافظة</option>
