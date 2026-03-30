@@ -1,4 +1,4 @@
-// ملف: -/script.js (المتجر)
+// ملف: script.js
 import { getFirestore, collection, onSnapshot, addDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
 if ('serviceWorker' in navigator) {
@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // جلب شريط الأخبار
     onSnapshot(doc(db, 'settings', 'news'), docSnap => {
         const textEl = document.getElementById('store-news-text');
         const container = document.getElementById('news-ticker-container');
@@ -146,20 +145,23 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase().trim();
             const cards = document.querySelectorAll('.product-card');
-            let found = false;
+            let count = 0;
             cards.forEach(card => {
                 const title = card.querySelector('.prod-title').innerText.toLowerCase();
                 if(title.includes(term)) {
                     card.style.display = 'flex';
-                    if(term.length > 0) found = true;
+                    if(term.length > 0) count++;
                 } else {
                     card.style.display = 'none';
                 }
             });
-            if(found && term.length > 0) {
-                // إظهار التوست العادي عند البحث
+            if(term.length > 0) {
                 const toast = document.getElementById('toast-notification'); 
-                toast.innerText = "تم العثور على المنتج المطلوب"; 
+                if (count > 0) {
+                    toast.innerText = count === 1 ? "تم العثور على نتيجة واحدة" : `تم العثور على ${count} نتائج`;
+                } else {
+                    toast.innerText = "لا توجد نتائج";
+                }
                 toast.className = '';
                 void toast.offsetWidth;
                 toast.classList.add('show-toast'); 
@@ -303,6 +305,7 @@ window.updateCartUI = function() {
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:10px; background:#f9f9f9; padding:5px 10px; border-radius:20px;">
+                    <span style="font-size:12px; font-weight:bold; color:#555; margin-left:5px;">الكمية:</span>
                     <button onclick="changeQty(${index}, 1)" style="border:none; background:none; font-weight:bold; font-size:18px; cursor:pointer;">+</button>
                     <span style="font-weight:bold;">${item.qty}</span>
                     <button onclick="changeQty(${index}, -1)" style="border:none; background:none; font-weight:bold; font-size:18px; cursor:pointer;">-</button>
@@ -326,7 +329,7 @@ window.updateCartUI = function() {
 window.changeAge = function(index, amount) {
     if(!cart[index].age) cart[index].age = 1;
     cart[index].age += amount;
-    if(cart[index].age < 1) cart[index].age = 1; // العمر لا يمكن أن يكون أقل من 1
+    if(cart[index].age < 1) cart[index].age = 1; 
     window.updateCartUI();
 }
 
@@ -360,14 +363,13 @@ window.processCheckout = async function() {
         return;
     }
 
-    // إظهار توست عادي للتحميل
     const toast = document.getElementById('toast-notification'); 
     toast.innerText = "جاري إرسال الطلب..."; 
     toast.className = '';
     toast.classList.add('show-toast');
 
     try {
-        const orderNumber = Math.floor(1000000 + Math.random() * 9000000); // رقم طلب من 7 أرقام
+        const orderNumber = Math.floor(1000000 + Math.random() * 9000000); 
         let currentTotal = cart.reduce((acc, curr) => acc + (curr.price * curr.qty), 0);
 
         await addDoc(collection(db, 'orders'), {
@@ -384,7 +386,7 @@ window.processCheckout = async function() {
             date: serverTimestamp()
         });
         
-        toast.classList.remove('show-toast'); // إخفاء توست التحميل
+        toast.classList.remove('show-toast'); 
         
         cart = [];
         document.getElementById('order-name').value = '';
@@ -394,7 +396,6 @@ window.processCheckout = async function() {
         if(document.getElementById('order-notes-supplier')) document.getElementById('order-notes-supplier').value = '';
         window.updateCartUI();
         
-        // إظهار الرسالة المنبثقة 3D للطلب الناجح
         document.getElementById('success-modal').style.display = 'flex';
         
     } catch (e) {
@@ -434,17 +435,16 @@ window.openWhatsAppSupport = function() {
     else showToast("رقم الخدمة غير متوفر"); 
 }
 
-// عرض رسالة توست 3D للمتجر
 function showToast(msg) { 
     const toast = document.getElementById('toast-notification'); 
     if(toast) {
         toast.innerText = msg; 
         toast.className = 'toast-3d'; 
-        void toast.offsetWidth; // Trigger reflow
+        void toast.offsetWidth; 
         toast.classList.add('show-toast'); 
         setTimeout(() => {
             toast.classList.remove('show-toast');
-            setTimeout(() => toast.className = '', 400); // clear class after fadeout
+            setTimeout(() => toast.className = '', 400); 
         }, 3000); 
     }
 }
