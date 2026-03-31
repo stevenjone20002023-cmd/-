@@ -62,8 +62,8 @@ body { background: var(--light); color: var(--text); overflow-x: hidden; padding
     text-shadow: none;
 }
 @keyframes ticker {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
 /* === 7. البحث === */
