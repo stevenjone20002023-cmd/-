@@ -58,7 +58,7 @@ body { background: var(--light); color: var(--text); overflow-x: hidden; padding
     font-size: 15px;
     color: #000;
     display: inline-block;
-    animation: ticker 25s linear infinite;
+    animation: ticker 42s linear infinite;
     text-shadow: none;
 }
 @keyframes ticker {
