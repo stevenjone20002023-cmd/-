@@ -58,11 +58,11 @@ body { background: var(--light); color: var(--text); overflow-x: hidden; padding
     font-size: 15px;
     color: #000;
     display: inline-block;
-    animation: ticker 42s linear infinite;
+    animation: ticker 52.5s linear infinite;
     text-shadow: none;
 }
 @keyframes ticker {
-    0% { transform: translateX(-100%); }
+    0% { transform: translateX(0); }
     100% { transform: translateX(100%); }
 }
 
