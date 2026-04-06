@@ -363,6 +363,14 @@ window.processCheckout = async function() {
         return;
     }
 
+    if(phone.length !== 11) {
+        showToast("يجب ان يكتب 11 رقم اجباري");
+        document.getElementById('order-phone').style.border = "2px solid red";
+        return;
+    } else {
+        document.getElementById('order-phone').style.border = "1px solid #ddd";
+    }
+
     const toast = document.getElementById('toast-notification'); 
     toast.innerText = "جاري إرسال الطلب..."; 
     toast.className = '';
